@@ -80,7 +80,7 @@ class _AddMemoryFormState extends State<AddMemoryForm> {
           Wrap(
             spacing: 8,
             runSpacing: 8,
-            children: MemoryType.values.map((type) {
+            children: _creatableTypes.map((type) {
               return ChoiceChip(
                 selected: _type == type,
                 avatar: Icon(typeIcon(type), size: 18),
@@ -223,6 +223,14 @@ class _AddMemoryFormState extends State<AddMemoryForm> {
     widget.onRecordingChanged?.call(false);
   }
 }
+
+const _creatableTypes = [
+  MemoryType.note,
+  MemoryType.photo,
+  MemoryType.audio,
+  MemoryType.heart,
+  MemoryType.goal,
+];
 
 class _PhotoPickerPreview extends StatelessWidget {
   const _PhotoPickerPreview({

@@ -10,6 +10,7 @@ plugins {
 android {
     namespace = "com.saurionavidad.saurio_navidad"
     compileSdk = flutter.compileSdkVersion
+    ndkVersion = "28.2.13676358"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8

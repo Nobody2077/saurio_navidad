@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -219,7 +221,8 @@ class _HomeScreenState extends State<HomeScreen>
       backgroundColor: const Color(0xFF171B24),
       showDragHandle: true,
       isScrollControlled: true,
-      builder: (context) => MemoryDetail(memory: memory),
+      builder: (context) =>
+          MemoryDetail(memory: memory, onDelete: _deleteMemory),
     );
   }
 
@@ -276,6 +279,45 @@ class _HomeScreenState extends State<HomeScreen>
         );
       },
     );
+  }
+
+  Future<void> _deleteMemory(Memory memory) async {
+    final updated = _memories
+        .where((storedMemory) => storedMemory.id != memory.id)
+        .toList();
+
+    HapticFeedback.mediumImpact();
+    setState(() => _memories = updated);
+    await _store.save(updated);
+    await _deleteMemoryFile(memory.photoPath);
+    await _deleteMemoryFile(memory.audioPath);
+
+    _setSaurioReaction(
+      mood: SaurioMood.cozy,
+      message: 'Listo, esa esfera ya no esta en el arbol.',
+    );
+
+    if (!mounted) {
+      return;
+    }
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(const SnackBar(content: Text('Esfera borrada.')));
+  }
+
+  Future<void> _deleteMemoryFile(String? path) async {
+    if (path == null || path.isEmpty) {
+      return;
+    }
+    final file = File(path);
+    try {
+      if (await file.exists()) {
+        await file.delete();
+      }
+    } on FileSystemException {
+      // The memory is already removed from the app even if the old media file
+      // cannot be deleted from disk.
+    }
   }
 
   void _openAddMemory() {

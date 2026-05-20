@@ -10,9 +10,10 @@ import '../utils/memory_style.dart';
 import 'pill.dart';
 
 class MemoryDetail extends StatelessWidget {
-  const MemoryDetail({super.key, required this.memory});
+  const MemoryDetail({super.key, required this.memory, required this.onDelete});
 
   final Memory memory;
+  final Future<void> Function(Memory memory) onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +43,11 @@ class MemoryDetail extends StatelessWidget {
                     fontWeight: FontWeight.w800,
                   ),
                 ),
+              ),
+              IconButton(
+                onPressed: () => _confirmDelete(context),
+                icon: const Icon(Icons.delete_outline),
+                tooltip: 'Borrar esfera',
               ),
             ],
           ),
@@ -83,6 +89,38 @@ class MemoryDetail extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  Future<void> _confirmDelete(BuildContext context) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Borrar esfera'),
+          content: Text('Quieres borrar "${memory.title}"?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context, false),
+              child: const Text('Cancelar'),
+            ),
+            FilledButton.icon(
+              onPressed: () => Navigator.pop(context, true),
+              icon: const Icon(Icons.delete_outline),
+              label: const Text('Borrar'),
+            ),
+          ],
+        );
+      },
+    );
+
+    if (confirmed != true || !context.mounted) {
+      return;
+    }
+
+    await onDelete(memory);
+    if (context.mounted) {
+      Navigator.of(context).popUntil((route) => route.isFirst);
+    }
   }
 }
 
