@@ -17,7 +17,7 @@ class SaurioCompanion extends StatelessWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       width: 220,
-      height: 200,
+      height: 280,
       child: Stack(
         children: [
           Positioned(
