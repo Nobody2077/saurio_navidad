@@ -2,6 +2,25 @@ import 'package:flutter/material.dart';
 
 import '../models/memory.dart';
 
+const List<({String emoji, String label})> kEmotionOptions = [
+  (emoji: '😊', label: 'Alegría'),
+  (emoji: '🥲', label: 'Nostalgia'),
+  (emoji: '❤️', label: 'Amor'),
+  (emoji: '🌿', label: 'Paz'),
+  (emoji: '✨', label: 'Orgullo'),
+  (emoji: '🎉', label: 'Sorpresa'),
+  (emoji: '🤗', label: 'Cariño'),
+  (emoji: '😌', label: 'Calma'),
+];
+
+String emotionEmoji(String label) =>
+    kEmotionOptions
+        .firstWhere(
+          (e) => e.label == label,
+          orElse: () => (emoji: '', label: ''),
+        )
+        .emoji;
+
 IconData typeIcon(MemoryType type) {
   switch (type) {
     case MemoryType.note:

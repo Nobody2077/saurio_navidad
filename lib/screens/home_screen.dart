@@ -128,15 +128,7 @@ class _HomeScreenState extends State<HomeScreen>
                                 child: Stack(
                                   alignment: Alignment.bottomCenter,
                                   children: [
-                                    Positioned(
-                                      top: 0,
-                                      child: SaurioCompanion(
-                                        mood: saurioMood,
-                                        morning: isMorning,
-                                        progress: _controller.value,
-                                        message: saurioMessage,
-                                      ),
-                                    ),
+                                    // Tree rendered first so Saurio appears in front
                                     Positioned(
                                       bottom: 72,
                                       child: GestureDetector(
@@ -158,6 +150,15 @@ class _HomeScreenState extends State<HomeScreen>
                                           ),
                                         ),
                                       ),
+                                    // Saurio at bottom-left, in front of tree
+                                    Positioned(
+                                      bottom: 98,
+                                      left: 2,
+                                      child: SaurioCompanion(
+                                        mood: saurioMood,
+                                        message: saurioMessage,
+                                      ),
+                                    ),
                                     Positioned(
                                       bottom: 0,
                                       child: GestureDetector(

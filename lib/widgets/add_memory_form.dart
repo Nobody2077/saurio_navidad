@@ -9,6 +9,7 @@ import '../services/photo_service.dart';
 import '../utils/date_helpers.dart';
 import '../utils/memory_style.dart';
 
+
 class AddMemoryForm extends StatefulWidget {
   const AddMemoryForm({
     super.key,
@@ -36,6 +37,7 @@ class _AddMemoryFormState extends State<AddMemoryForm> {
   bool _recordingAudio = false;
   String? _photoPath;
   String? _audioPath;
+  String? _emotion;
 
   @override
   void dispose() {
@@ -107,6 +109,12 @@ class _AddMemoryFormState extends State<AddMemoryForm> {
               onDelete: _deleteAudio,
             ),
           ],
+          const SizedBox(height: 14),
+          _EmotionPicker(
+            selected: _emotion,
+            onSelect: (value) => setState(() => _emotion = value),
+          ),
+          const SizedBox(height: 4),
           SwitchListTile(
             value: _capsule,
             contentPadding: EdgeInsets.zero,
@@ -164,7 +172,7 @@ class _AddMemoryFormState extends State<AddMemoryForm> {
             : _description.text.trim(),
         date: now,
         type: _type,
-        emotion: _capsule ? 'Sorpresa' : 'Carino',
+        emotion: _emotion ?? (_capsule ? 'Sorpresa' : 'Cariño'),
         lockedUntil: _capsule ? nextChristmasEve(now) : null,
         photoPath: _type == MemoryType.photo ? _photoPath : null,
         audioPath: _type == MemoryType.audio ? _audioPath : null,
@@ -231,6 +239,48 @@ const _creatableTypes = [
   MemoryType.heart,
   MemoryType.goal,
 ];
+
+class _EmotionPicker extends StatelessWidget {
+  const _EmotionPicker({required this.selected, required this.onSelect});
+
+  final String? selected;
+  final ValueChanged<String?> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: const [
+            Text(
+              '¿Cómo se siente?',
+              style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600),
+            ),
+            SizedBox(width: 6),
+            Text(
+              'opcional',
+              style: TextStyle(fontSize: 11, color: Color(0xFF8A9A8A)),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
+          children: kEmotionOptions.map((opt) {
+            final isSelected = selected == opt.label;
+            return FilterChip(
+              selected: isSelected,
+              label: Text('${opt.emoji} ${opt.label}'),
+              onSelected: (_) => onSelect(isSelected ? null : opt.label),
+            );
+          }).toList(),
+        ),
+      ],
+    );
+  }
+}
 
 class _PhotoPickerPreview extends StatelessWidget {
   const _PhotoPickerPreview({

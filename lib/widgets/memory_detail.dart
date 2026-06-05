@@ -9,6 +9,7 @@ import '../utils/date_helpers.dart';
 import '../utils/memory_style.dart';
 import 'pill.dart';
 
+
 class MemoryDetail extends StatelessWidget {
   const MemoryDetail({super.key, required this.memory, required this.onDelete});
 
@@ -77,7 +78,15 @@ class MemoryDetail extends StatelessWidget {
             spacing: 8,
             runSpacing: 8,
             children: [
-              Pill(icon: Icons.favorite_border, label: memory.emotion),
+              Pill(
+                emoji: emotionEmoji(memory.emotion).isEmpty
+                    ? null
+                    : emotionEmoji(memory.emotion),
+                icon: emotionEmoji(memory.emotion).isEmpty
+                    ? Icons.favorite_border
+                    : null,
+                label: memory.emotion,
+              ),
               Pill(icon: typeIcon(memory.type), label: typeLabel(memory.type)),
             ],
           ),
