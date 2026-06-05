@@ -7,10 +7,12 @@ class HomeHeader extends StatelessWidget {
     super.key,
     required this.isDecember,
     required this.memories,
+    this.onNotificationSettings,
   });
 
   final bool isDecember;
   final int memories;
+  final VoidCallback? onNotificationSettings;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,12 @@ class HomeHeader extends StatelessWidget {
                   letterSpacing: 0,
                 ),
               ),
+            ),
+            IconButton(
+              onPressed: onNotificationSettings,
+              icon: const Icon(Icons.notifications_outlined),
+              tooltip: 'Recordatorios',
+              color: const Color(0xFFE0C073),
             ),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),

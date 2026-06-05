@@ -17,6 +17,7 @@ import '../widgets/gift_chest.dart';
 import '../widgets/home_header.dart';
 import '../widgets/memory_detail.dart';
 import '../widgets/memory_list.dart';
+import '../widgets/notification_settings_sheet.dart';
 import '../widgets/saurio_companion.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -121,6 +122,8 @@ class _HomeScreenState extends State<HomeScreen>
                               HomeHeader(
                                 isDecember: _isDecember,
                                 memories: _memories.length,
+                                onNotificationSettings:
+                                    _openNotificationSettings,
                               ),
                               const SizedBox(height: 18),
                               SizedBox(
@@ -254,6 +257,16 @@ class _HomeScreenState extends State<HomeScreen>
           },
         );
       },
+    );
+  }
+
+  void _openNotificationSettings() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF171B24),
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => const NotificationSettingsSheet(),
     );
   }
 
