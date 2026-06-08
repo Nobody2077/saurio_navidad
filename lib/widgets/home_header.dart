@@ -7,12 +7,18 @@ class HomeHeader extends StatelessWidget {
     super.key,
     required this.isDecember,
     required this.memories,
-    this.onNotificationSettings,
+    this.onSettings,
   });
 
   final bool isDecember;
   final int memories;
-  final VoidCallback? onNotificationSettings;
+  final VoidCallback? onSettings;
+
+  static String _greeting(int hour) {
+    if (hour >= 5 && hour < 12) return 'Buenos días';
+    if (hour >= 12 && hour < 19) return 'Buenas tardes';
+    return 'Buenas noches';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -22,30 +28,21 @@ class HomeHeader extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Expanded(
+            Expanded(
               child: Text(
-                'SaurioNavidad',
-                style: TextStyle(
-                  fontSize: 34,
+                _greeting(now.hour),
+                style: const TextStyle(
+                  fontSize: 28,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 0,
                 ),
               ),
             ),
             IconButton(
-              onPressed: onNotificationSettings,
-              icon: const Icon(Icons.notifications_outlined),
-              tooltip: 'Recordatorios',
+              onPressed: onSettings,
+              icon: const Icon(Icons.settings_outlined),
+              tooltip: 'Ajustes',
               color: const Color(0xFFE0C073),
-            ),
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: const Color(0x22FFFFFF),
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: const Color(0x26FFFFFF)),
-              ),
-              child: Text('${now.day}/${now.month}/${now.year}'),
             ),
           ],
         ),
@@ -61,6 +58,10 @@ class HomeHeader extends StatelessWidget {
           spacing: 8,
           runSpacing: 8,
           children: [
+            Pill(
+              icon: Icons.calendar_today,
+              label: '${now.day}/${now.month}/${now.year}',
+            ),
             Pill(icon: Icons.auto_awesome, label: '$memories recuerdos'),
             Pill(
               icon: Icons.lock_clock,

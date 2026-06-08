@@ -19,6 +19,7 @@ import '../widgets/memory_detail.dart';
 import '../widgets/memory_list.dart';
 import '../widgets/notification_settings_sheet.dart';
 import '../widgets/saurio_companion.dart';
+import '../widgets/settings_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -122,8 +123,7 @@ class _HomeScreenState extends State<HomeScreen>
                               HomeHeader(
                                 isDecember: _isDecember,
                                 memories: _memories.length,
-                                onNotificationSettings:
-                                    _openNotificationSettings,
+                                onSettings: _openSettings,
                               ),
                               const SizedBox(height: 18),
                               SizedBox(
@@ -257,6 +257,21 @@ class _HomeScreenState extends State<HomeScreen>
           },
         );
       },
+    );
+  }
+
+  void _openSettings() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF171B24),
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (sheetContext) => SettingsSheet(
+        onOpenNotifications: () {
+          Navigator.pop(sheetContext);
+          _openNotificationSettings();
+        },
+      ),
     );
   }
 
