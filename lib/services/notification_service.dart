@@ -1,8 +1,8 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -45,10 +45,17 @@ class NotificationService {
     'Saurio está aquí, esperándote con calma.',
   ];
 
+  static const _tzChannel = MethodChannel('saurio/timezone');
+
   Future<void> init() async {
     tz.initializeTimeZones();
-    final zoneName = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(zoneName));
+    try {
+      final zoneName =
+          await _tzChannel.invokeMethod<String>('getLocalTimezone') ?? 'UTC';
+      tz.setLocalLocation(tz.getLocation(zoneName));
+    } catch (_) {
+      tz.setLocalLocation(tz.getLocation('UTC'));
+    }
 
     const settings = InitializationSettings(
       android: AndroidInitializationSettings('@mipmap/ic_launcher'),
