@@ -164,11 +164,9 @@ class _HomeScreenState extends State<HomeScreen>
                                     ),
                                     Positioned(
                                       bottom: 0,
-                                      child: GestureDetector(
+                                      child: GiftChest(
+                                        capsules: _capsules.length,
                                         onTap: _showCapsuleChest,
-                                        child: GiftChest(
-                                          capsules: _capsules.length,
-                                        ),
                                       ),
                                     ),
                                   ],
