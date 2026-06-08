@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../models/memory.dart';
+import '../painters/ground_painter.dart';
 import '../painters/saurio_painter.dart';
 import '../painters/snow_painter.dart';
 import '../painters/tree_painter.dart';
 import '../services/memory_store.dart';
+import '../utils/day_phase.dart';
 import '../utils/memory_style.dart';
 import '../widgets/add_memory_form.dart';
 import '../widgets/capsule_chest_sheet.dart';
@@ -75,7 +77,7 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     final hour = DateTime.now().hour;
-    final isMorning = hour >= 5 && hour < 11;
+    final phase = dayPhaseForHour(hour);
     final visibleMemories = _visibleMemories;
     final saurioMood = _saurioMoodOverride ?? SaurioMood.cozy;
     final saurioMessage = _saurioMessageOverride ?? _ambientSaurioMessage(hour);
@@ -89,17 +91,7 @@ class _HomeScreenState extends State<HomeScreen>
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: isMorning
-                    ? const [
-                        Color(0xFF263D57),
-                        Color(0xFF8B6F6B),
-                        Color(0xFF171B24),
-                      ]
-                    : const [
-                        Color(0xFF080B13),
-                        Color(0xFF182334),
-                        Color(0xFF11151D),
-                      ],
+                colors: phase.skyColors,
               ),
             ),
             child: SafeArea(
@@ -108,7 +100,7 @@ class _HomeScreenState extends State<HomeScreen>
                   Positioned.fill(
                     child: SnowField(
                       progress: _controller.value,
-                      morning: isMorning,
+                      phase: phase,
                     ),
                   ),
                   if (_loading)
@@ -130,7 +122,18 @@ class _HomeScreenState extends State<HomeScreen>
                                 height: 560,
                                 child: Stack(
                                   alignment: Alignment.bottomCenter,
+                                  clipBehavior: Clip.none,
                                   children: [
+                                    // Snowy ground behind everything.
+                                    // Bleeds -18 each side to cancel the sliver
+                                    // padding and reach the screen edges.
+                                    Positioned(
+                                      left: -18,
+                                      right: -18,
+                                      bottom: 0,
+                                      height: 150,
+                                      child: SnowGround(phase: phase),
+                                    ),
                                     // Tree rendered first so Saurio appears in front
                                     Positioned(
                                       bottom: 72,
