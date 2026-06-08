@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../utils/date_helpers.dart';
 import 'pill.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -18,6 +19,11 @@ class HomeHeader extends StatelessWidget {
     if (hour >= 5 && hour < 12) return 'Buenos días';
     if (hour >= 12 && hour < 19) return 'Buenas tardes';
     return 'Buenas noches';
+  }
+
+  static String _countdownLabel(DateTime now) {
+    final days = daysUntilDecember(now);
+    return days == 1 ? '1 día para diciembre' : '$days días para diciembre';
   }
 
   @override
@@ -65,9 +71,10 @@ class HomeHeader extends StatelessWidget {
             Pill(icon: Icons.auto_awesome, label: '$memories recuerdos'),
             Pill(
               icon: Icons.lock_clock,
-              label: isDecember ? 'diciembre activo' : 'modo espera',
+              label: isDecember
+                  ? 'diciembre activo'
+                  : _countdownLabel(now),
             ),
-            const Pill(icon: Icons.favorite, label: 'frase del dia'),
           ],
         ),
       ],
