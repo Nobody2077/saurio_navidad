@@ -32,6 +32,7 @@ class HomeHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final now = DateTime.now();
+    final floats = phase == DayPhase.morning;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -45,6 +46,8 @@ class HomeHeader extends StatelessWidget {
                   phase: phase,
                   fontSize: 22,
                   fontWeight: FontWeight.w800,
+                  floating: floats,
+                  floatPeriod: const Duration(milliseconds: 2200),
                 ),
               ),
             ),
@@ -64,12 +67,16 @@ class HomeHeader extends StatelessWidget {
               icon: Icons.calendar_today,
               label: '${now.day}/${now.month}/${now.year}',
               phase: phase,
+              floating: floats,
+              floatPeriod: const Duration(milliseconds: 2600),
             ),
             const Spacer(),
             CloudChip(
               icon: Icons.lock_clock,
               label: isDecember ? 'diciembre activo' : _countdownLabel(now),
               phase: phase,
+              floating: floats,
+              floatPeriod: const Duration(milliseconds: 2400),
             ),
           ],
         ),
@@ -81,6 +88,8 @@ class HomeHeader extends StatelessWidget {
             icon: Icons.auto_awesome,
             label: '$memories recuerdos',
             phase: phase,
+            floating: floats,
+            floatPeriod: const Duration(milliseconds: 2800),
           ),
         ),
       ],

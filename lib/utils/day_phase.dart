@@ -73,6 +73,40 @@ extension DayPhasePalette on DayPhase {
     }
   }
 
+  /// Fondo de la burbuja de diálogo de Saurio (clara de día, oscura de noche).
+  Color get bubbleColor {
+    switch (this) {
+      case DayPhase.morning:
+        return const Color(0xFFFBF4EA);
+      case DayPhase.midday:
+        return const Color(0xFFF8FBFD);
+      case DayPhase.night:
+        return const Color(0xFF1B2433);
+    }
+  }
+
+  /// Color del texto de la burbuja (oscuro sobre clara, claro sobre oscura).
+  Color get bubbleTextColor {
+    switch (this) {
+      case DayPhase.morning:
+      case DayPhase.midday:
+        return const Color(0xFF283445);
+      case DayPhase.night:
+        return const Color(0xFFE6ECF5);
+    }
+  }
+
+  /// Borde sutil de la burbuja.
+  Color get bubbleBorder {
+    switch (this) {
+      case DayPhase.morning:
+      case DayPhase.midday:
+        return const Color(0x14283445);
+      case DayPhase.night:
+        return const Color(0x22FFFFFF);
+    }
+  }
+
   /// Suelo nevado: [borde/brillo superior, cuerpo].
   List<Color> get groundColors {
     switch (this) {

@@ -159,11 +159,12 @@ class _HomeScreenState extends State<HomeScreen>
                                       ),
                                     // Saurio at bottom-left, in front of tree
                                     Positioned(
-                                      bottom: 98,
+                                      bottom: 90,
                                       left: 2,
                                       child: SaurioCompanion(
                                         mood: saurioMood,
                                         message: saurioMessage,
+                                        phase: phase,
                                       ),
                                     ),
                                     Positioned(
@@ -325,7 +326,7 @@ class _HomeScreenState extends State<HomeScreen>
 
     _setSaurioReaction(
       mood: SaurioMood.cozy,
-      message: 'Listo, esa esfera ya no esta en el arbol.',
+      message: 'Listo, esa esfera ya no está en el árbol.',
     );
 
     if (!mounted) {
@@ -355,7 +356,7 @@ class _HomeScreenState extends State<HomeScreen>
     _setSaurioReaction(
       mood: SaurioMood.excited,
       message:
-          'Vamos a colgar una esfera nueva. Puede ser pequena y aun asi valer mucho.',
+          'Vamos a colgar una esfera nueva. Puede ser pequeña y aun así valer mucho.',
     );
     showModalBottomSheet(
       context: context,
@@ -401,12 +402,12 @@ class _HomeScreenState extends State<HomeScreen>
 
   String _ambientSaurioMessage(int hour) {
     if (hour >= 5 && hour < 11) {
-      return 'Buenos dias. El arbol ya esta despierto y yo tambien.';
+      return 'Buenos días. El árbol ya está despierto y yo también.';
     }
     if (hour >= 11 && hour < 18) {
-      return 'Que bueno verte por aqui. Hoy el arbol esta tranquilo y brillante.';
+      return '¡Qué bueno verte por aquí! Hoy el árbol está tranquilo y brillante.';
     }
-    return 'Llegaste en modo noche. Las luces se ven mejor asi.';
+    return 'Llegaste en modo noche. Las luces se ven mejor así.';
   }
 
   void _reactForMemory(Memory memory, {bool saved = false}) {
@@ -423,7 +424,7 @@ class _HomeScreenState extends State<HomeScreen>
       case MemoryType.audio:
         _setSaurioReaction(
           mood: SaurioMood.recording,
-          message: '$prefix Las voces hacen que el arbol suene vivo.',
+          message: '$prefix Las voces hacen que el árbol suene vivo.',
         );
         break;
       case MemoryType.heart:
@@ -435,7 +436,7 @@ class _HomeScreenState extends State<HomeScreen>
       case MemoryType.place:
         _setSaurioReaction(
           mood: SaurioMood.excited,
-          message: '$prefix Un lugar tambien puede ser una casa pequena.',
+          message: '$prefix Un lugar también puede ser una casa pequeña.',
         );
         break;
       case MemoryType.goal:
@@ -447,7 +448,7 @@ class _HomeScreenState extends State<HomeScreen>
       case MemoryType.note:
         _setSaurioReaction(
           mood: SaurioMood.excited,
-          message: '$prefix Una nota suave para el arbol.',
+          message: '$prefix Una nota suave para el árbol.',
         );
         break;
     }
@@ -470,13 +471,13 @@ class _HomeScreenState extends State<HomeScreen>
       case MemoryType.heart:
         _setSaurioReaction(
           mood: SaurioMood.surprise,
-          message: 'Los momentos de corazon van con brillo extra.',
+          message: 'Los momentos de corazón van con brillo extra.',
         );
         break;
       case MemoryType.place:
         _setSaurioReaction(
           mood: SaurioMood.excited,
-          message: 'Un lugar puede vivir dentro del arbol tambien.',
+          message: 'Un lugar puede vivir dentro del árbol también.',
         );
         break;
       case MemoryType.goal:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 
 import '../utils/day_phase.dart';
 
@@ -13,6 +14,8 @@ class CloudChip extends StatelessWidget {
     this.icon,
     this.fontSize = 14,
     this.fontWeight = FontWeight.w700,
+    this.floating = false,
+    this.floatPeriod = const Duration(milliseconds: 2400),
   });
 
   final String label;
@@ -21,12 +24,18 @@ class CloudChip extends StatelessWidget {
   final double fontSize;
   final FontWeight fontWeight;
 
+  /// Si flota suavemente (solo se usa en la mañana).
+  final bool floating;
+
+  /// Periodo del flote; variar entre chips los hace ver más orgánicos.
+  final Duration floatPeriod;
+
   static const _textColor = Color(0xFF283445);
   static const _iconColor = Color(0xFFC79A3E);
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
+    final chip = CustomPaint(
       painter: _CloudPainter(color: phase.cloudColor),
       child: Padding(
         // Más espacio arriba para que los bultos de la nube no tapen el texto.
@@ -55,6 +64,17 @@ class CloudChip extends StatelessWidget {
         ),
       ),
     );
+
+    if (!floating) return chip;
+
+    return chip
+        .animate(onPlay: (controller) => controller.repeat(reverse: true))
+        .moveY(
+          begin: 0,
+          end: -5,
+          duration: floatPeriod,
+          curve: Curves.easeInOut,
+        );
   }
 }
 
