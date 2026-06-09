@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 
 import '../models/memory.dart';
 import '../painters/ground_painter.dart';
+import '../painters/night_sky.dart';
 import '../painters/saurio_painter.dart';
 import '../painters/snow_painter.dart';
 import '../painters/tree_painter.dart';
@@ -97,6 +98,8 @@ class _HomeScreenState extends State<HomeScreen>
             child: SafeArea(
               child: Stack(
                 children: [
+                  if (phase == DayPhase.night)
+                    const Positioned.fill(child: NightSky()),
                   Positioned.fill(
                     child: SnowField(
                       progress: _controller.value,
