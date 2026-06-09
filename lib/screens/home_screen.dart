@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import '../painters/saurio_painter.dart';
 import '../painters/snow_painter.dart';
 import '../painters/tree_painter.dart';
 import '../services/memory_store.dart';
+import '../services/visit_store.dart';
 import '../utils/day_phase.dart';
 import '../utils/memory_style.dart';
 import '../widgets/add_memory_form.dart';
@@ -35,11 +37,15 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _controller;
   final MemoryStore _store = MemoryStore();
+  final VisitStore _visitStore = VisitStore();
 
   List<Memory> _memories = [];
   bool _loading = true;
   SaurioMood? _saurioMoodOverride;
   String? _saurioMessageOverride;
+  String _baseMessage = '';
+  Timer? _greetingTimer;
+  Timer? _incentiveTimer;
   Memory? _newSphereMemory;
   int _reactionToken = 0;
   int _sphereFlightToken = 0;
@@ -56,6 +62,8 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   void dispose() {
+    _greetingTimer?.cancel();
+    _incentiveTimer?.cancel();
     _controller.dispose();
     super.dispose();
   }
@@ -81,7 +89,7 @@ class _HomeScreenState extends State<HomeScreen>
     final phase = dayPhaseForHour(hour);
     final visibleMemories = _visibleMemories;
     final saurioMood = _saurioMoodOverride ?? SaurioMood.cozy;
-    final saurioMessage = _saurioMessageOverride ?? _ambientSaurioMessage(hour);
+    final saurioMessage = _saurioMessageOverride ?? _baseMessage;
 
     return Scaffold(
       body: AnimatedBuilder(
@@ -215,6 +223,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _loadMemories() async {
     final memories = await _store.load();
+    final previousVisit = await _visitStore.recordVisitAndGetPrevious();
     if (!mounted) {
       return;
     }
@@ -222,6 +231,67 @@ class _HomeScreenState extends State<HomeScreen>
       _memories = memories;
       _loading = false;
     });
+    _startSaurioSequence(previousVisit);
+  }
+
+  /// Secuencia de la burbuja de Saurio al entrar:
+  /// saludo (o bienvenida tras varios días) → incentivo → desaparece.
+  void _startSaurioSequence(DateTime? previousVisit) {
+    setState(() => _baseMessage = _greetingMessage(previousVisit));
+
+    _greetingTimer = Timer(const Duration(seconds: 12), () {
+      if (!mounted) {
+        return;
+      }
+      setState(() => _baseMessage = _incentiveMessage());
+
+      _incentiveTimer = Timer(const Duration(seconds: 12), () {
+        if (!mounted) {
+          return;
+        }
+        setState(() => _baseMessage = '');
+      });
+    });
+  }
+
+  String _greetingMessage(DateTime? previousVisit) {
+    if (previousVisit != null) {
+      final now = DateTime.now();
+      final today = DateTime(now.year, now.month, now.day);
+      final prev = DateTime(
+        previousVisit.year,
+        previousVisit.month,
+        previousVisit.day,
+      );
+      final days = today.difference(prev).inDays;
+      if (days >= 3) {
+        return 'Wow, ¡cuánto tiempo! La última vez que nos vimos fue hace '
+            '$days días. Te extrañé.';
+      }
+    }
+    return _ambientSaurioMessage(DateTime.now().hour);
+  }
+
+  String _incentiveMessage() {
+    if (_memories.isEmpty) {
+      return 'El árbol está esperando su primer recuerdo. ¿Colgamos uno?';
+    }
+    final now = DateTime.now();
+    final today = DateTime(now.year, now.month, now.day);
+    final latest = _memories
+        .map((memory) => memory.date)
+        .reduce((a, b) => a.isAfter(b) ? a : b);
+    final days = today
+        .difference(DateTime(latest.year, latest.month, latest.day))
+        .inDays;
+
+    if (days <= 1) {
+      return '¡Qué lindo el recuerdo que agregaste! ¿Sumamos otro al árbol?';
+    }
+    if (days >= 7) {
+      return 'Tu último recuerdo fue hace $days días. ¿Colgamos uno nuevo hoy?';
+    }
+    return '¿Quieres colgar otro recuerdo en el árbol?';
   }
 
   void _openMemory(Memory memory) {
