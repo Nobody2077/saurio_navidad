@@ -115,6 +115,7 @@ class _HomeScreenState extends State<HomeScreen>
                               HomeHeader(
                                 isDecember: _isDecember,
                                 memories: _memories.length,
+                                phase: phase,
                                 onSettings: _openSettings,
                               ),
                               const SizedBox(height: 18),

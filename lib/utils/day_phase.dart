@@ -60,6 +60,19 @@ extension DayPhasePalette on DayPhase {
     }
   }
 
+  /// Color de las nubes del saludo/chips (claro en todo momento para que el
+  /// texto oscuro siempre se lea; atenuado de noche para no encandilar).
+  Color get cloudColor {
+    switch (this) {
+      case DayPhase.morning:
+        return const Color(0xFFFBF4EA);
+      case DayPhase.midday:
+        return const Color(0xFFF5F9FC);
+      case DayPhase.night:
+        return const Color(0xFFC9D2E2);
+    }
+  }
+
   /// Suelo nevado: [borde/brillo superior, cuerpo].
   List<Color> get groundColors {
     switch (this) {

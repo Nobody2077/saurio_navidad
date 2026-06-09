@@ -1,29 +1,32 @@
 import 'package:flutter/material.dart';
 
 import '../utils/date_helpers.dart';
-import 'pill.dart';
+import '../utils/day_phase.dart';
+import 'cloud_chip.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({
     super.key,
     required this.isDecember,
     required this.memories,
+    required this.phase,
     this.onSettings,
   });
 
   final bool isDecember;
   final int memories;
+  final DayPhase phase;
   final VoidCallback? onSettings;
 
   static String _greeting(int hour) {
-    if (hour >= 5 && hour < 12) return 'Buenos días';
-    if (hour >= 12 && hour < 19) return 'Buenas tardes';
-    return 'Buenas noches';
+    if (hour >= 5 && hour < 12) return 'Buenos Días';
+    if (hour >= 12 && hour < 19) return 'Buenas Tardes';
+    return 'Buenas Noches';
   }
 
   static String _countdownLabel(DateTime now) {
     final days = daysUntilDecember(now);
-    return days == 1 ? '1 día para diciembre' : '$days días para diciembre';
+    return days == 1 ? '1 día' : '$days días';
   }
 
   @override
@@ -34,13 +37,14 @@ class HomeHeader extends StatelessWidget {
       children: [
         Row(
           children: [
+            const SizedBox(width: 48), // equilibra el ancho del engranaje
             Expanded(
-              child: Text(
-                _greeting(now.hour),
-                style: const TextStyle(
-                  fontSize: 28,
+              child: Center(
+                child: CloudChip(
+                  label: _greeting(now.hour),
+                  phase: phase,
+                  fontSize: 22,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: 0,
                 ),
               ),
             ),
@@ -52,30 +56,32 @@ class HomeHeader extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          isDecember
-              ? 'El arbol desperto y esta revelando recuerdos.'
-              : 'El arbol duerme suave hasta diciembre.',
-          style: const TextStyle(color: Color(0xFFD6D2C8), fontSize: 15),
-        ),
         const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
+        // Fecha (izquierda) y días (derecha) en la misma fila, separados
+        Row(
           children: [
-            Pill(
+            CloudChip(
               icon: Icons.calendar_today,
               label: '${now.day}/${now.month}/${now.year}',
+              phase: phase,
             ),
-            Pill(icon: Icons.auto_awesome, label: '$memories recuerdos'),
-            Pill(
+            const Spacer(),
+            CloudChip(
               icon: Icons.lock_clock,
-              label: isDecember
-                  ? 'diciembre activo'
-                  : _countdownLabel(now),
+              label: isDecember ? 'diciembre activo' : _countdownLabel(now),
+              phase: phase,
             ),
           ],
+        ),
+        const SizedBox(height: 8),
+        // Recuerdos (más al centro)
+        Align(
+          alignment: Alignment.center,
+          child: CloudChip(
+            icon: Icons.auto_awesome,
+            label: '$memories recuerdos',
+            phase: phase,
+          ),
         ),
       ],
     );
