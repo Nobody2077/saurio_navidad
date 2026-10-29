@@ -8,3 +8,11 @@ android/local.properties
 android/app/debug
 android/app/profile
 android/app/release
+
+# Logs locales de Kotlin/Gradle
+android/.kotlin/
+
+# Datos o llaves que nunca deben subirse
+*.jks
+*.keystore
+android/key.properties
