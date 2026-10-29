@@ -36,6 +36,7 @@ flutter:
   assets:
     - assets/images/
     - assets/chest/
+    - assets/sounds/
     - assets/saurio/cozy/
     - assets/saurio/excited/
     - assets/saurio/recording/

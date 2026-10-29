@@ -27,9 +27,11 @@
 - Evitar que parezca solo una mascota verde redonda.
 - Estilo sugerido: baby dinosaurio navideno, tierno, expresivo y emocional.
 
-## Opcion tecnica recomendada
+## Opcion tecnica
 
-- Usar Rive para una mascota animada con estados: idle, feliz, grabando audio, foto, sorpresa y dormido.
+- Rive descartado (2026-10-29): no hay forma de crear ni editar el `.riv` desde el flujo de trabajo actual y nunca llego a estar en `pubspec.yaml`.
+- Saurio se anima con sus PNG por estado + `flutter_animate` (y cuadros extra si se dibujan).
+- Estados de Saurio: idle/cozy, feliz/excited, grabando, foto, sorpresa y dormido (pendiente).
 - Mantener Flutter Animate para microinteracciones de UI.
 
 ## Implementado en Flutter como primera iteracion
@@ -39,10 +41,4 @@
 - Saurio muestra mensajes calidos como guia sin culpar al usuario por no entrar.
 - Al guardar una esfera hay vibracion suave, sonido del sistema y una esfera que sube hacia el arbol.
 - El cofre usa tarjetas visuales con candado, fecha y estado.
-- Se agregaron `flutter_animate` y `rive` como base tecnica para microinteracciones y futura mascota Rive.
-
-## Rive pendiente
-
-- Crear/exportar `assets/rive/saurio.riv` desde el editor de Rive.
-- Registrar el asset en `pubspec.yaml` cuando el archivo exista.
-- Conectar la maquina de estados de Rive con acciones de la app.
+- Se agrego `flutter_animate` como base tecnica para microinteracciones.
