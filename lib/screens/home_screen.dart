@@ -11,6 +11,7 @@ import '../painters/saurio_painter.dart';
 import '../painters/snow_painter.dart';
 import '../painters/tree_painter.dart';
 import '../services/memory_store.dart';
+import '../services/sound_service.dart';
 import '../services/visit_store.dart';
 import '../utils/day_phase.dart';
 import '../utils/memory_style.dart';
@@ -25,6 +26,7 @@ import '../widgets/memory_list.dart';
 import '../widgets/notification_settings_sheet.dart';
 import '../widgets/saurio_companion.dart';
 import '../widgets/settings_sheet.dart';
+import '../widgets/sound_settings_sheet.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -176,6 +178,7 @@ class _HomeScreenState extends State<HomeScreen>
                                         mood: saurioMood,
                                         message: saurioMessage,
                                         phase: phase,
+                                        onTap: _onSaurioTap,
                                       ),
                                     ),
                                     Positioned(
@@ -294,7 +297,17 @@ class _HomeScreenState extends State<HomeScreen>
     return '¿Quieres colgar otro recuerdo en el árbol?';
   }
 
+  void _onSaurioTap() {
+    HapticFeedback.selectionClick();
+    SoundService.instance.play(Sfx.saurioTocar);
+    _setSaurioReaction(
+      mood: SaurioMood.excited,
+      message: '¡Rawr! Eso hizo cosquillas.',
+    );
+  }
+
   void _openMemory(Memory memory) {
+    SoundService.instance.play(Sfx.forMemory(memory.type));
     _reactForMemory(memory);
     showModalBottomSheet(
       context: context,
@@ -347,7 +360,21 @@ class _HomeScreenState extends State<HomeScreen>
           Navigator.pop(sheetContext);
           _openNotificationSettings();
         },
+        onOpenSounds: () {
+          Navigator.pop(sheetContext);
+          _openSoundSettings();
+        },
       ),
+    );
+  }
+
+  void _openSoundSettings() {
+    showModalBottomSheet(
+      context: context,
+      backgroundColor: const Color(0xFF171B24),
+      showDragHandle: true,
+      isScrollControlled: true,
+      builder: (context) => const SoundSettingsSheet(),
     );
   }
 
@@ -362,6 +389,7 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   void _showCapsuleChest() {
+    SoundService.instance.play(Sfx.cofreAbrir);
     _setSaurioReaction(
       mood: SaurioMood.surprise,
       message:
@@ -392,6 +420,7 @@ class _HomeScreenState extends State<HomeScreen>
         .toList();
 
     HapticFeedback.mediumImpact();
+    SoundService.instance.play(Sfx.borrar);
     setState(() => _memories = updated);
     await _store.save(updated);
     await _deleteMemoryFile(memory.photoPath);
@@ -450,7 +479,7 @@ class _HomeScreenState extends State<HomeScreen>
           onSave: (memory) async {
             final updated = [memory, ..._memories];
             HapticFeedback.lightImpact();
-            SystemSound.play(SystemSoundType.click);
+            SoundService.instance.play(Sfx.esferaGuardar);
             setState(() {
               _memories = updated;
               _newSphereMemory = memory;

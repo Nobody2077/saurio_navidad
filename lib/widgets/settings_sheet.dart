@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 
 class SettingsSheet extends StatelessWidget {
-  const SettingsSheet({super.key, required this.onOpenNotifications});
+  const SettingsSheet({
+    super.key,
+    required this.onOpenNotifications,
+    required this.onOpenSounds,
+  });
 
   final VoidCallback onOpenNotifications;
+  final VoidCallback onOpenSounds;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +35,13 @@ class SettingsSheet extends StatelessWidget {
             title: 'Recordatorios',
             subtitle: 'Configura cuándo Saurio te avisa de visitar el árbol',
             onTap: onOpenNotifications,
+          ),
+          const SizedBox(height: 10),
+          _SettingsTile(
+            icon: Icons.music_note_outlined,
+            title: 'Sonidos',
+            subtitle: 'Efectos, música navideña y escuchar cada sonido',
+            onTap: onOpenSounds,
           ),
         ],
       ),

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../models/memory.dart';
 import '../services/audio_service.dart';
 import '../services/photo_service.dart';
+import '../services/sound_service.dart';
 import '../utils/date_helpers.dart';
 import '../utils/memory_style.dart';
 
@@ -181,6 +182,9 @@ class _AddMemoryFormState extends State<AddMemoryForm> {
   }
 
   Future<void> _startAudio() async {
+    // El bip suena antes de abrir el micrófono para que no quede grabado.
+    await SoundService.instance.play(Sfx.grabarInicio);
+    await Future.delayed(const Duration(milliseconds: 320));
     final path = await _audioService.startRecording();
     if (!mounted) {
       return;
@@ -207,6 +211,7 @@ class _AddMemoryFormState extends State<AddMemoryForm> {
       _audioPath = path ?? _audioPath;
       _recordingAudio = false;
     });
+    SoundService.instance.play(Sfx.grabarFin);
     widget.onRecordingChanged?.call(false);
   }
 

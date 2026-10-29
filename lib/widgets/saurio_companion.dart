@@ -14,11 +14,13 @@ class SaurioCompanion extends StatelessWidget {
     required this.mood,
     required this.message,
     required this.phase,
+    this.onTap,
   });
 
   final SaurioMood mood;
   final String message;
   final DayPhase phase;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +51,15 @@ class SaurioCompanion extends StatelessWidget {
           Positioned(
             bottom: 0,
             left: 0,
-            child: SaurioMascot(mood: mood)
-                .animate(onPlay: (controller) => controller.repeat(reverse: true))
-                .moveY(begin: 0, end: -4, duration: 2200.ms),
+            child: GestureDetector(
+              onTap: onTap,
+              behavior: HitTestBehavior.opaque,
+              child: SaurioMascot(mood: mood)
+                  .animate(
+                    onPlay: (controller) => controller.repeat(reverse: true),
+                  )
+                  .moveY(begin: 0, end: -4, duration: 2200.ms),
+            ),
           ),
         ],
       ),
