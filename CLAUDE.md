@@ -3,6 +3,8 @@
 App Flutter (solo Android): un árbol de Navidad con recuerdos, la mascota Saurio
 y un cofre de cápsulas. Hablar siempre en español con Juan.
 
+**Al empezar una sesión, leer `ESTADO_ACTUAL.md` (dónde nos quedamos).**
+
 ## Reglas que no se rompen
 
 - **Nunca subir datos personales a GitHub.** Los recuerdos, fotos y audios viven
